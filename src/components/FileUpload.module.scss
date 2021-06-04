@@ -17,5 +17,9 @@
     display: flex;
     flex-direction: column;
   }
-  .uploadBtn {}
+  .uploadBtn {
+    > * {
+      margin-right: 10px;
+    }
+  }
 }

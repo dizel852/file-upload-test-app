@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 250px;
+
+  .uploadPath {
+    display: flex;
+    flex-direction: column;
+
+    input {
+      min-width: 300px;
+    }
+  }
+  .selectFile {
+    display: flex;
+    flex-direction: column;
+  }
+  .uploadBtn {}
+}

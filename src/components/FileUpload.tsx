@@ -11,7 +11,7 @@ const startOrResumeUpload = (upload: any) => {
     })
 }
 
-const createTusUploadInstance = (file:  File, uploadPath: string) => {
+const createTusUploadInstance = (file:  File, uploadPath: string, uploadHeaderPath: string) => {
     // @ts-ignore
     const upload = new tus.Upload(file, {
         endpoint: uploadPath,
@@ -19,6 +19,9 @@ const createTusUploadInstance = (file:  File, uploadPath: string) => {
         metadata: {
             filename: file.name,
             filetype: file.type
+        },
+        headers: {
+            filepath: uploadHeaderPath
         },
         onError: (error) => console.log("Failed because: " + error),
         onProgress: (bytesUploaded, bytesTotal) => {
@@ -33,6 +36,7 @@ const createTusUploadInstance = (file:  File, uploadPath: string) => {
 
 const FileUpload = () => {
     const [uploadPath, setUploadPath] = useState(window.location.href);
+    const [uploadHeaderPath, setUploadHeaderPath] = useState("/home/nazar/test");
     const fileInputEl = useRef<HTMLInputElement>(null);
     let uploadInst: any;
 
@@ -44,7 +48,7 @@ const FileUpload = () => {
         const [file] = Array.from(fileInputEl.current.files)
         console.dir(file)
 
-        uploadInst = createTusUploadInstance(file, uploadPath)
+        uploadInst = createTusUploadInstance(file, uploadPath, uploadHeaderPath)
         uploadInst.findPreviousUploads().then(function (previousUploads: string | any[]) {
             if (previousUploads.length) {
                 uploadInst.resumeFromPreviousUpload(previousUploads[0])
@@ -75,6 +79,8 @@ const FileUpload = () => {
             <div className={styles.uploadPath}>
                 <label htmlFor="uploadPath">Upload path</label>
                 <input type="text" id="uploadPath" value={uploadPath} onChange={({target: {value}}) => setUploadPath(value)} />
+                <label htmlFor="uploadHeader">Upload header path</label>
+                <input type="text" id="uploadHeader" value={uploadHeaderPath} onChange={({target: {value}}) => setUploadHeaderPath(value)} />
             </div>
             <div className={styles.selectFile}>
                 <label htmlFor="selectedFile">Select a file</label>
